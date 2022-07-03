@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <title>Principal</title>
+</head>
+
+<body>
+    <div class="container p-4">
+        <div class="jumbotron">
+            <h1 class="display-4">Analisis de sentimiento</h1>
+            <p class="lead">Proyecto Final Analitica de la Web - Grupo 1</p>
+            <label for="basic-url">Por favor, escriba el url de la pagina a analizar</label>
+
+            <form action="/selector" , method="get">
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon3">https://www.facebook.com/</span>
+                    </div>
+                    <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" name="pagina" required>
+                </div>
+                <!--<hr class="my-4">-->
+                <p>La carga de imagenes puede demorar hasta 30 segundos. Una vez elegido el post, volvera a esta vista.
+                    Recordar que tendra que escoger entre los ultimos 4 posts realizados por la pagina. 
+                </p>
+
+                <input type="submit" class="btn btn-primary" value="Buscar" />
+            </form>
+            <!--
+            <button class="btn btn-primary" type="submit">Buscar</button>
+            
+            
+            <a class="btn btn-primary" href="/selector" role="button">Buscar</a>
+            
+                <button class="btn btn-primary" type="button" disabled>Buscar
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Cargando...
+            </button>
+            -->
+        </div>
+    </div>
+</body>
+
+</html>
