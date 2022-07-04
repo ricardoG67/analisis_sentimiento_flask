@@ -6,10 +6,6 @@ from facebook_scraper import get_posts
 #Flask importacion
 from flask import Flask, render_template, request
 #Necesario para analisis de sentimiento e importar el modelo
-import joblib
-from keras.preprocessing.sequence import pad_sequences
-import numpy as np
-from tensorflow.keras.models import load_model
 import pickle
 import string
 import emoji
