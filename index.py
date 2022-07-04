@@ -10,6 +10,9 @@ import joblib
 from keras.preprocessing.sequence import pad_sequences
 import numpy as np
 from tensorflow.keras.models import load_model
+import pickle
+import string
+import emoji
 
 app = Flask(__name__)
 
@@ -51,74 +54,68 @@ def final():
 
             if request.form.get('boton') == 'VALUE1':
                 #SE PUEDE SIMPLIFICAR EN UNA FUNCION:
-                analisis = []
-                for i in post1["comments_full"]:
-                    comentInfo = []
-                    comentInfo.append(i["commenter_name"])
-                    comentInfo.append(i["comment_text"])
-                    comentInfo.append(i["comment_time"])
-
-                    comentInfo.append(analisis_sentimiento(i["comment_text"]))
-
-                    analisis.append(comentInfo)
                 
+                analisis = tarea_repetitiva(post1)
+
                 return render_template('final.html', post = analisis)
 
             elif  request.form.get('boton') == 'VALUE2':
-                analisis = []
-                for i in post2["comments_full"]:
-                    comentInfo = []
-                    comentInfo.append(i["commenter_name"])
-                    comentInfo.append(i["comment_text"])
-                    comentInfo.append(i["comment_time"])
-
-                    comentInfo.append(analisis_sentimiento(i["comment_text"]))
-
-                    analisis.append(comentInfo)
+                
+                analisis = tarea_repetitiva(post2)
                 
                 return render_template('final.html', post = analisis)
   
             elif  request.form.get('boton') == 'VALUE3':
-                analisis = []
-                for i in post3["comments_full"]:
-                    comentInfo = []
-                    comentInfo.append(i["commenter_name"])
-                    comentInfo.append(i["comment_text"])
-                    comentInfo.append(i["comment_time"])
 
-                    comentInfo.append(analisis_sentimiento(i["comment_text"]))
+                analisis = tarea_repetitiva(post3)
 
-                    analisis.append(comentInfo)
-                
                 return render_template('final.html', post = analisis)
 
             elif  request.form.get('boton') == 'VALUE4':
 
-                analisis = []
-                for i in post4["comments_full"]:
-                    comentInfo = []
-                    comentInfo.append(i["commenter_name"])
-                    comentInfo.append(i["comment_text"])
-                    comentInfo.append(i["comment_time"])
-
-                    comentInfo.append(analisis_sentimiento(i["comment_text"]))
-
-                    analisis.append(comentInfo)
+                analisis = tarea_repetitiva(post4)
                 
                 return render_template('final.html', post = analisis)
     
 
-def analisis_sentimiento(comentario):
-    tokenizer = joblib.load('tokenizer')
-    comentario = tokenizer.texts_to_sequences(comentario)
-    comentario = pad_sequences(comentario, maxlen=65, dtype='int32', value=0)
-    model3 = load_model('model3.h5', compile = False)
-    sentiment = model3.predict(comentario,batch_size=2,verbose = 2)[0]
+def tarea_repetitiva(post):
+    analisis = []
+    for i in post["comments_full"]:
+        comentInfo = []
+        comentInfo.append(i["commenter_name"])
+        comentInfo.append(i["comment_text"])
+        comentInfo.append(i["comment_time"])
 
-    if(np.argmax(sentiment) == 0):
+        comentInfo.append(analisis_sentimiento(i["comment_text"]))
+
+        analisis.append(comentInfo)
+    return analisis
+
+def analisis_sentimiento(comentario):
+    file = open('vector', 'rb')
+    vector = pickle.load(file)
+
+    file = open('model_SVM.h5', 'rb')
+    model = pickle.load(file)
+
+    limpieza(comentario)
+
+    fv = vector.transform([comentario])
+    sentiment = model.predict(fv)
+
+    if(sentiment[0] == 0):
         return "negative"
-    elif (np.argmax(sentiment) == 1):
+    elif (sentiment[0] == 1):
         return "positive"
+
+def limpieza(texto):
+    alfa = string.ascii_lowercase + ' '
+    textoLimpio = ''.join([c for c in texto.lower() if c in alfa])
+    textoLimpio = ' '.join(textoLimpio.split())
+    for character in texto.lower():
+        if character in emoji.UNICODE_EMOJI_SPANISH:           
+            textoLimpio = emoji.demojize(character)
+    return textoLimpio
 
 if __name__ == '__main__':
     app.run(debug=True)  # Esta linea hace que se actualice cada que cambie algo
