@@ -114,4 +114,4 @@ def limpieza(texto):
     return textoLimpio
 
 if __name__ == '__main__':
-    app.run(debug=True)  # Esta linea hace que se actualice cada que cambie algo
+    app.run(debug=True,host='0.0.0.0')  # Esta linea hace que se actualice cada que cambie algo
